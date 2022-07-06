@@ -3,6 +3,7 @@ import { getRandomInt } from "../math";
 import { Render } from "./graphics";
 import { accelerationSystem, movementSystem, Position } from "./physics";
 import {
+  bulletCleanupSystem,
   bulletShipCollisionSystem,
   createShip,
   engineSystem,
@@ -12,6 +13,7 @@ import {
   movingToPointSystem,
   Ship,
   shootingSystem,
+  targetingSystem,
 } from "./ships";
 
 export type World = {
@@ -21,13 +23,15 @@ export type World = {
 export type System = (w: World) => World;
 
 const pipeline = pipe(
+  targetingSystem,
   movingToPointSystem,
   moveToPointSystem,
   movementSystem,
   engineSystem,
   accelerationSystem,
-  // shootingSystem,
-  bulletShipCollisionSystem
+  shootingSystem,
+  bulletShipCollisionSystem,
+  bulletCleanupSystem
 );
 
 export type Renderable = {
@@ -46,13 +50,14 @@ export const startECS = () => {
   });
 
   // Create 100 random ships with random velocities
-  const ships = 200;
+  const ships = 10;
+  let target: null | number = null;
   for (let i = 0; i < ships; i++) {
     const x = getRandomInt(-200, 200);
     const y = getRandomInt(-200, 200);
     const vx = Math.random() * 2 - 1;
     const vy = Math.random() * 2 - 1;
-    createShip(world, { x, y }, { x: vx, y: vy });
+    target = createShip(world, { x, y }, { x: vx, y: vy }, target);
   }
 
   return (delta: number): Renderable[] => {

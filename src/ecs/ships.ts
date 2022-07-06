@@ -6,6 +6,7 @@ import {
   defineQuery,
   removeEntity,
   removeComponent,
+  hasComponent,
 } from "bitecs";
 import {
   Acceleration,
@@ -41,11 +42,26 @@ export const getRotation = (eid: number) => Rotation.radians[eid];
 
 // Commands
 const MoveTo = defineComponent(Vector2);
+const addMoveTo = (world: World, eid: number, dest: Vec2) => {
+  addComponent(world, MoveTo, eid);
+  setDestination(eid, dest);
+};
+const setDestination = (eid: number, dest: Vec2) => {
+  MoveTo.x[eid] = dest.x;
+  MoveTo.y[eid] = dest.y;
+};
 const getDestination = (eid: number): Vec2 => ({
   x: MoveTo.x[eid],
   y: MoveTo.y[eid],
 });
 const MovingTo = defineComponent(Vector2);
+const Targeting = defineComponent({ eid: Types.f32 });
+const setTarget = (eid: number, target: number) =>
+  (Targeting.eid[eid] = target);
+const addTargeting = (world: World, eid: number, target: number) => {
+  addComponent(world, Targeting, eid);
+  setTarget(eid, target);
+};
 
 const ShootingState = { cooldown: Types.f32, currentCooldown: Types.f32 };
 const Shooter = defineComponent(ShootingState);
@@ -53,7 +69,12 @@ const Shooter = defineComponent(ShootingState);
 export const Ship = defineComponent();
 const Bullet = defineComponent({ collisionRadius: Types.f32 });
 
-export const createShip = (world: World, pos: Vec2, velocity: Vec2) => {
+export const createShip = (
+  world: World,
+  pos: Vec2,
+  velocity: Vec2,
+  target: null | number
+): number => {
   const eid = addEntity(world);
   addPosition(world, eid, pos);
   addVelocity(world, eid, velocity);
@@ -68,14 +89,14 @@ export const createShip = (world: World, pos: Vec2, velocity: Vec2) => {
 
   addComponent(world, MoveTo, eid);
 
-  MoveTo.x[eid] = 0;
-  MoveTo.y[eid] = 0;
+  MoveTo.x[eid] = getRandomInt(-200, 200);
+  MoveTo.y[eid] = getRandomInt(-200, 200);
 
   Rotation.radians[eid] = 0;
 
   Mass.value[eid] = 100;
 
-  Engine.maxForce[eid] = 3;
+  Engine.maxForce[eid] = 2;
   Engine.percent[eid] = 0;
 
   Acceleration.x[eid] = 0;
@@ -84,8 +105,13 @@ export const createShip = (world: World, pos: Vec2, velocity: Vec2) => {
   Position.x[eid] = pos.x;
   Position.y[eid] = pos.y;
 
-  Shooter.cooldown[eid] = 30;
-  Shooter.currentCooldown[eid] = 30;
+  Shooter.cooldown[eid] = 10;
+  Shooter.currentCooldown[eid] = 10;
+
+  if (target !== null) {
+    addTargeting(world, eid, target);
+  }
+  return eid;
 };
 
 export const createBullet = (
@@ -118,7 +144,7 @@ export const shootingSystem = makeSystem(
       const shooterVelocity = getVelocity(eid);
       const rotation = Rotation.radians[eid];
       const unitVec = normOfRotation(rotation);
-      const muzzleVelocity = scale(unitVec, 5);
+      const muzzleVelocity = scale(unitVec, 8);
 
       const velocity = add(shooterVelocity, muzzleVelocity);
       const initialPosition = add(pos, scale(velocity, 2));
@@ -234,4 +260,29 @@ export const movingToPointSystem = makeSystem(
   }
 );
 
-// export const bulletCleanupSystem = //....
+export const bulletCleanupSystem = makeSystem(
+  [Bullet, Position],
+  (eid, _c, world) => {
+    const pos = getPosition(eid);
+    if (pos.x > 1000 || pos.x < -1000 || pos.y > 1000 || pos.y < -1000) {
+      removeEntity(world, eid);
+    }
+  }
+);
+
+export const targetingSystem = makeSystem([Targeting], (eid, _c, world) => {
+  console.log("TS");
+  const targetEid = Targeting.eid[eid];
+  if (!hasComponent(world, Position, targetEid)) {
+    removeComponent(world, Targeting, eid);
+    return;
+  }
+  const targetPos = getPosition(targetEid);
+  if (hasComponent(world, MoveTo, eid)) {
+    console.log(`Targeting ${targetPos}`);
+    setDestination(eid, targetPos);
+  } else {
+    console.log("Adding target");
+    addMoveTo(world, eid, targetPos);
+  }
+});
