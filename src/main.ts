@@ -1,5 +1,6 @@
 import { Application, Graphics, Container, Point } from "pixi.js";
 import { startECS } from "./ecs";
+import { Shape } from "./ecs/components/Render";
 
 const app = new Application({
   width: 800,
@@ -29,38 +30,38 @@ originGraphics.endFill();
 app.stage.addChild(originGraphics);
 
 const containers: Record<number, Container> = {};
-const engines: Record<number, Container> = {};
 
 app.ticker.add((delta) => {
-  const entities = stepECS(delta).map(transformPos);
+  const entities = stepECS(delta).map((r) => ({
+    ...r,
+    position: { ...transformPos(r.position) },
+  }));
   for (const e of entities) {
     if (!(e.eid in containers)) {
       const container = new Container();
       const graphics = new Graphics();
-
-      if (e.type === "ship") {
-        graphics.beginFill(0xffffee);
+      if (e.shape === Shape.Triangle) {
+        graphics.beginFill(e.color);
         graphics.drawPolygon([
-          new Point(0, 5),
-          new Point(2, 0),
-          new Point(-2, 0),
+          new Point(0, e.size),
+          new Point(e.size / 3, 0),
+          new Point(-1 * (e.size / 3), 0),
         ]);
         graphics.endFill();
         container.pivot = new Point(0, 1.67);
-      } else {
-        graphics.beginFill(0xffbb00);
-        graphics.drawCircle(0, 0, 1);
+      }
+      if (e.shape === Shape.Circle) {
+        graphics.beginFill(0x0011ff);
+        graphics.drawCircle(0, 0, e.size);
         graphics.endFill();
       }
       container.addChild(graphics);
       app.stage.addChild(container);
       containers[e.eid] = container;
     }
-    if (e.type === "ship") {
-      containers[e.eid].rotation = e.rotation - Math.PI / 2;
-    }
-    containers[e.eid].x = e.x;
-    containers[e.eid].y = e.y;
+    containers[e.eid].rotation = e.rotation - Math.PI / 2;
+    containers[e.eid].x = e.position.x;
+    containers[e.eid].y = e.position.y;
   }
   //Clenanup removed entities
   const drawnEids = entities.map((e) => e.eid);
