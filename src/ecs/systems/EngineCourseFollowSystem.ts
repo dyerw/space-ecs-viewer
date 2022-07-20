@@ -42,7 +42,6 @@ const engineCourseFollowSystem = makeSystem(
         currentRot = radians;
         estimatedArrivalTime += 1;
       }
-      console.log({ maxA, currentMag, estimatedArrivalTime });
 
       setEngine(world, eid, { percent: 1 });
       setRotation(world, eid, currentRot);
