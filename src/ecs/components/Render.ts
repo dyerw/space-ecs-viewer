@@ -10,7 +10,7 @@ export type RenderT = { shape: Shape; color: number; size: number };
 
 export const Render = defineComponent({
   shape: Types.i8,
-  color: Types.i8,
+  color: Types.i32,
   size: Types.f32,
 });
 export const setRender = (eid: number, render: Partial<RenderT>): void => {

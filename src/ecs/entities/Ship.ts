@@ -35,7 +35,5 @@ export const createShip = (world: World, params: ShipCreateParams): number => {
   addRender(world, eid, Shape.Triangle, 0xffffff, 5);
   // addShooter
 
-  addCourse(world, eid, { x: 0, y: 0 }, { x: 0, y: 1 });
-
   return eid;
 };

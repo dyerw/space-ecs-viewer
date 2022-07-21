@@ -3,8 +3,8 @@ import { startECS } from "./ecs";
 import { Shape } from "./ecs/components/Render";
 
 const app = new Application({
-  width: 800,
-  height: 600,
+  width: 1000,
+  height: 800,
   backgroundColor: 0x000011,
   resolution: window.devicePixelRatio || 1,
 });
@@ -51,7 +51,8 @@ app.ticker.add((delta) => {
         container.pivot = new Point(0, 1.67);
       }
       if (e.shape === Shape.Circle) {
-        graphics.beginFill(0x0011ff);
+        console.log(e.color);
+        graphics.beginFill(e.color);
         graphics.drawCircle(0, 0, e.size);
         graphics.endFill();
       }

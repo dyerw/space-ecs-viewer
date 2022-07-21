@@ -18,6 +18,7 @@ export const getRenderList = (world: World): Renderable[] => {
   for (let eid of ents) {
     const position = getPosition(world, eid);
     const render = getRender(world, eid);
+    console.log(render);
     const rotation = getRotation(world, eid);
     if (position && render) {
       renderables.push({

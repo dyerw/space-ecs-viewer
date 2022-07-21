@@ -6,6 +6,7 @@ import {
   getMoveToPointCommand,
   MoveToPointCommand,
 } from "../components/MoveToPointCommand";
+import { addMovingTo } from "../components/MovingToPoint";
 import { getPosition, Position } from "../components/Position";
 import { Rotation, setRotation } from "../components/Rotation";
 import { getVelocity } from "../components/Velocity";
@@ -57,7 +58,7 @@ const moveToPointSystem = makeSystem(
       setRotation(world, eid, rotation);
 
       removeComponent(world, MoveToPointCommand, eid);
-      // TODO: Add Moving to point
+      addMovingTo(world, eid, P_2);
     }
   }
 );

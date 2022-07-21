@@ -50,6 +50,8 @@ export const addCourse = (
   destination: Vec2,
   targetVelocity: Vec2
 ) => {
-  addComponent(world, Course, eid);
+  if (!hasComponent(world, Course, eid)) {
+    addComponent(world, Course, eid);
+  }
   setCourse(world, eid, destination, targetVelocity);
 };

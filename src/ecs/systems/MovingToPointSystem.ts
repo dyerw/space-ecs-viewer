@@ -13,7 +13,8 @@ const movingToPointSystem = makeSystem(
     const destination = getMovingTo(world, eid);
     if (pos && destination) {
       const d = distance(pos, destination);
-      if (d <= 5) {
+      if (d <= 10) {
+        console.log("Finding new point")
         setEngine(world, eid, { percent: 0 });
         Engine.percent[eid] = 0;
         removeComponent(world, MovingTo, eid);

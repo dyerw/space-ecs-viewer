@@ -21,7 +21,8 @@ const engineSystem = makeSystem(
       const accVec = scale(normOfRotation(rotation.radians), acceleration);
       setAcceleration(world, eid, accVec);
 
-      createEngineTrail(world, { position, size: 1 });
+      const colors = [0x00ff00, 0xff0000, 0x0000fff];
+      createEngineTrail(world, { position, size: 1, color: colors[eid] });
     }
   }
 );

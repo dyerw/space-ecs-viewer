@@ -36,6 +36,9 @@ export const scale = (v: Vec2, scalar: number): Vec2 => {
   };
 };
 
+export const getUnitVec = (v: Vec2): Vec2 =>
+  vecFromAngleMag(angleMagFromVec(v).radians, 1);
+
 export const add = (v1: Vec2, v2: Vec2): Vec2 => {
   return {
     x: v1.x + v2.x,
