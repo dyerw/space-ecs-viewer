@@ -1,4 +1,5 @@
 import { removeComponent } from "bitecs";
+import { scale } from "../../math";
 import { addCourse } from "../components/Course";
 import { getPosition } from "../components/Position";
 import { getTarget, Targeting } from "../components/Targeting";
@@ -12,7 +13,7 @@ const targetingSystem = makeSystem([Targeting, Ship], (eid, world) => {
     const targetVel = getVelocity(world, target.eid);
     const targetPos = getPosition(world, target.eid);
     if (targetVel && targetPos) {
-      addCourse(world, eid, targetPos, targetVel);
+      addCourse(world, eid, targetPos, scale(targetVel, 0.1));
     } else {
       removeComponent(world, Targeting, eid);
     }
