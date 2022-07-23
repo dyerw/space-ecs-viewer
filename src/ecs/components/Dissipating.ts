@@ -16,7 +16,6 @@ export const setDissipating = (
   rate: DissipatingT["rate"]
 ): void => {
   safeUpdateComponent(world, eid, Dissipating, (d) => {
-    console.log({ rate });
     d.rate[eid] = rate;
   });
 };

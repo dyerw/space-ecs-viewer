@@ -13,9 +13,6 @@ const dissipationSystem = makeSystem([Render, Dissipating], (eid, world) => {
     if (render.size <= dissipating.rate * delta) {
       removeEntity(world, eid);
     } else {
-      console.log("shrink");
-      console.log(dissipating);
-      console.log(render.size - dissipating.rate * delta);
       setRender(eid, {
         size: render.size - dissipating.rate * delta,
       });

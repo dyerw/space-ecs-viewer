@@ -80,7 +80,6 @@ app.ticker.add((delta) => {
     containers[e.eid].x = e.position.x;
     containers[e.eid].y = e.position.y;
     const scale = e.size / e.originalSize;
-    console.log(scale);
     containers[e.eid].scale = { x: scale, y: scale };
   }
   //Clenanup removed entities
