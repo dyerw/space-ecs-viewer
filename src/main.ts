@@ -11,6 +11,23 @@ const app = new Application({
 document.body.appendChild(app.view);
 console.log("Added PIXI View");
 
+// Debug buttons
+const pauseButton = document.getElementById("pause");
+const playButton = document.getElementById("play");
+const stepButton = document.getElementById("step");
+
+if (pauseButton && playButton && stepButton) {
+  pauseButton.onclick = () => {
+    app.ticker.stop();
+  };
+  playButton.onclick = () => {
+    app.ticker.start();
+  };
+  stepButton.onclick = () => {
+    app.ticker.update();
+  };
+}
+
 const stepECS = startECS();
 
 const transformPos = <T extends { x: number; y: number }>(pos: T): T => ({

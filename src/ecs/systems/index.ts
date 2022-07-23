@@ -8,6 +8,7 @@ import MovingToPointSystem from "./MovingToPointSystem";
 import EngineCourseFollowSystem from "./EngineCourseFollowSystem";
 import TargetingSystem from "./TargetingSystem";
 import DissipationSystem from "./DissipationSystem";
+import TurningSystem from "./TurningSystem";
 
 export default [
   AccelerationSystem,
@@ -20,4 +21,5 @@ export default [
   EngineCourseFollowSystem,
   TargetingSystem,
   DissipationSystem,
+  TurningSystem,
 ];

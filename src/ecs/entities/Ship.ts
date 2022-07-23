@@ -28,9 +28,9 @@ export const createShip = (world: World, params: ShipCreateParams): number => {
   addAcceleration(world, eid, { x: 0, y: 0 });
 
   addRotation(world, eid, 0);
-  addRotationSpeed(world, eid, 0.174533);
+  addRotationSpeed(world, eid, Math.PI / 90);
   addMass(world, eid, mass);
-  addEngine(world, eid, { maxForce: 2, percent: 0 });
+  addEngine(world, eid, { maxForce: 1, percent: 0 });
 
   addRender(world, eid, Shape.Triangle, 0xffffff, 5);
   // addShooter

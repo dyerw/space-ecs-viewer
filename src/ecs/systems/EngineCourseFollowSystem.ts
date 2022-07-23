@@ -6,10 +6,10 @@ import {
   projectVelocity,
 } from "../../math";
 import { Course, getCourse } from "../components/Course";
+import { addDesiredRotation } from "../components/DesiredRotation";
 import { Engine, getEngine, setEngine } from "../components/Engine";
 import { getMass, Mass } from "../components/Mass";
 import { getPosition, Position } from "../components/Position";
-import { setRotation } from "../components/Rotation";
 import { getVelocity, Velocity } from "../components/Velocity";
 import { makeSystem } from "../util";
 
@@ -44,7 +44,7 @@ const engineCourseFollowSystem = makeSystem(
       }
 
       setEngine(world, eid, { percent: 1 });
-      setRotation(world, eid, currentRot);
+      addDesiredRotation(world, eid, currentRot);
       if (distance(position, course.destination) < 2) {
         removeComponent(world, Course, eid);
         setEngine(world, eid, { percent: 0 });
