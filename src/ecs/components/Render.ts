@@ -6,15 +6,21 @@ export enum Shape {
   Triangle,
 }
 
-export type RenderT = { shape: Shape; color: number; size: number };
+export type RenderT = {
+  shape: Shape;
+  color: number;
+  size: number;
+  originalSize: number;
+};
 
 export const Render = defineComponent({
   shape: Types.i8,
   color: Types.i32,
   size: Types.f32,
+  originalSize: Types.f32,
 });
 export const setRender = (eid: number, render: Partial<RenderT>): void => {
-  const { shape, color, size } = render;
+  const { shape, color, size, originalSize } = render;
   if (shape) {
     Render.shape[eid] = shape;
   }
@@ -24,6 +30,9 @@ export const setRender = (eid: number, render: Partial<RenderT>): void => {
   if (size) {
     Render.size[eid] = size;
   }
+  if (originalSize) {
+    Render.originalSize[eid] = originalSize;
+  }
 };
 export const getRender = (world: World, eid: number): RenderT | undefined => {
   if (hasComponent(world, Render, eid)) {
@@ -31,6 +40,7 @@ export const getRender = (world: World, eid: number): RenderT | undefined => {
       shape: Render.shape[eid],
       color: Render.color[eid],
       size: Render.size[eid],
+      originalSize: Render.originalSize[eid],
     };
   }
   return undefined;
@@ -43,5 +53,5 @@ export const addRender = (
   size: number
 ) => {
   addComponent(world, Render, eid);
-  setRender(eid, { shape, color, size });
+  setRender(eid, { shape, color, size, originalSize: size });
 };

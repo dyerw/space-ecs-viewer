@@ -51,7 +51,6 @@ app.ticker.add((delta) => {
         container.pivot = new Point(0, 1.67);
       }
       if (e.shape === Shape.Circle) {
-        console.log(e.color);
         graphics.beginFill(e.color);
         graphics.drawCircle(0, 0, e.size);
         graphics.endFill();
@@ -63,6 +62,9 @@ app.ticker.add((delta) => {
     containers[e.eid].rotation = e.rotation - Math.PI / 2;
     containers[e.eid].x = e.position.x;
     containers[e.eid].y = e.position.y;
+    const scale = e.size / e.originalSize;
+    console.log(scale);
+    containers[e.eid].scale = { x: scale, y: scale };
   }
   //Clenanup removed entities
   const drawnEids = entities.map((e) => e.eid);
